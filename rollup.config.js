@@ -29,9 +29,8 @@ export default {
     }),
     babel({
       babelrc: false,
-      plugins: ['transform-regenerator', 'transform-async-to-generator', 'transform-runtime', 'external-helpers'],
+      plugins: ['transform-regenerator', 'transform-runtime', 'external-helpers'],
       exclude: 'node_modules/**',
-      //externalHelpers: true,
       runtimeHelpers: true,
       presets: [
         [ 'env', { modules: false }]
