@@ -1,35 +1,6 @@
 var rough = (function () {
 'use strict';
 
-var asyncToGenerator = function (fn) {
-  return function () {
-    var gen = fn.apply(this, arguments);
-    return new Promise(function (resolve, reject) {
-      function step(key, arg) {
-        try {
-          var info = gen[key](arg);
-          var value = info.value;
-        } catch (error) {
-          reject(error);
-          return;
-        }
-
-        if (info.done) {
-          resolve(value);
-        } else {
-          return Promise.resolve(value).then(function (value) {
-            step("next", value);
-          }, function (err) {
-            step("throw", err);
-          });
-        }
-      }
-
-      return step("next");
-    });
-  };
-};
-
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -1530,625 +1501,208 @@ var RoughCanvas = function () {
 
   createClass(RoughCanvas, [{
     key: 'lib',
-    value: function () {
-      var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var tos, worklySource, rendererSource, code, ourl;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (!this._renderer) {
-                  if (window.workly && !this.config.noWorker) {
-                    tos = Function.prototype.toString;
-                    worklySource = this.config.worklyURL || 'https://cdn.jsdelivr.net/gh/pshihn/workly/dist/workly.min.js';
-                    rendererSource = this.config.roughURL || self._roughScript;
-
-                    if (rendererSource && worklySource) {
-                      code = 'importScripts(\'' + worklySource + '\', \'' + rendererSource + '\');\nworkly.expose(self.rough.createRenderer());';
-                      ourl = URL.createObjectURL(new Blob([code]));
-
-                      this._renderer = workly.proxy(ourl);
-                    } else {
-                      this._renderer = new RoughRenderer();
-                    }
-                  } else {
-                    this._renderer = new RoughRenderer();
-                  }
-                }
-                return _context.abrupt('return', this._renderer);
-
-              case 2:
-              case 'end':
-                return _context.stop();
-            }
+    value: async function lib() {
+      if (!this._renderer) {
+        if (window.workly && !this.config.noWorker) {
+          var tos = Function.prototype.toString;
+          var worklySource = this.config.worklyURL || 'https://cdn.jsdelivr.net/gh/pshihn/workly/dist/workly.min.js';
+          var rendererSource = this.config.roughURL || self._roughScript;
+          if (rendererSource && worklySource) {
+            var code = 'importScripts(\'' + worklySource + '\', \'' + rendererSource + '\');\nworkly.expose(self.rough.createRenderer());';
+            var ourl = URL.createObjectURL(new Blob([code]));
+            this._renderer = workly.proxy(ourl);
+          } else {
+            this._renderer = new RoughRenderer();
           }
-        }, _callee, this);
-      }));
-
-      function lib() {
-        return _ref.apply(this, arguments);
+        } else {
+          this._renderer = new RoughRenderer();
+        }
       }
-
-      return lib;
-    }()
+      return this._renderer;
+    }
   }, {
     key: 'line',
-    value: function () {
-      var _ref2 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(x1, y1, x2, y2, options) {
-        var o, lib, drawing;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                o = this._options(options);
-                _context2.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context2.sent;
-                _context2.next = 6;
-                return lib.line(x1, y1, x2, y2, o);
-
-              case 6:
-                drawing = _context2.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 8:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function line(_x, _x2, _x3, _x4, _x5) {
-        return _ref2.apply(this, arguments);
-      }
-
-      return line;
-    }()
+    value: async function line(x1, y1, x2, y2, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      var drawing = await lib.line(x1, y1, x2, y2, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'rectangle',
-    value: function () {
-      var _ref3 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(x, y, width, height, options) {
-        var o, lib, ctx, xc, yc, fillShape, _fillShape, drawing;
-
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                o = this._options(options);
-                _context3.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context3.sent;
-
-                if (!o.fill) {
-                  _context3.next = 19;
-                  break;
-                }
-
-                ctx = this.ctx;
-                xc = [x, x + width, x + width, x];
-                yc = [y, y, y + height, y + height];
-
-                if (!(o.fillStyle === 'solid')) {
-                  _context3.next = 15;
-                  break;
-                }
-
-                _context3.next = 11;
-                return lib.solidFillShape(xc, yc, o);
-
-              case 11:
-                fillShape = _context3.sent;
-
-                this._fill(ctx, fillShape, o);
-                _context3.next = 19;
-                break;
-
-              case 15:
-                _context3.next = 17;
-                return lib.hachureFillShape(xc, yc, o);
-
-              case 17:
-                _fillShape = _context3.sent;
-
-                this._fillSketch(ctx, _fillShape, o);
-
-              case 19:
-                _context3.next = 21;
-                return lib.rectangle(x, y, width, height, o);
-
-              case 21:
-                drawing = _context3.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 23:
-              case 'end':
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      function rectangle(_x6, _x7, _x8, _x9, _x10) {
-        return _ref3.apply(this, arguments);
+    value: async function rectangle(x, y, width, height, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      if (o.fill) {
+        var ctx = this.ctx;
+        var xc = [x, x + width, x + width, x];
+        var yc = [y, y, y + height, y + height];
+        if (o.fillStyle === 'solid') {
+          var fillShape = await lib.solidFillShape(xc, yc, o);
+          this._fill(ctx, fillShape, o);
+        } else {
+          var _fillShape = await lib.hachureFillShape(xc, yc, o);
+          this._fillSketch(ctx, _fillShape, o);
+        }
       }
-
-      return rectangle;
-    }()
+      var drawing = await lib.rectangle(x, y, width, height, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'ellipse',
-    value: function () {
-      var _ref4 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(x, y, width, height, options) {
-        var o, lib, fillShape, _fillShape2, drawing;
-
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                o = this._options(options);
-                _context4.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context4.sent;
-
-                if (!o.fill) {
-                  _context4.next = 16;
-                  break;
-                }
-
-                if (!(o.fillStyle === 'solid')) {
-                  _context4.next = 12;
-                  break;
-                }
-
-                _context4.next = 8;
-                return lib.ellipse(x, y, width, height, o);
-
-              case 8:
-                fillShape = _context4.sent;
-
-                this._fill(this.ctx, fillShape, o);
-                _context4.next = 16;
-                break;
-
-              case 12:
-                _context4.next = 14;
-                return lib.hachureFillEllipse(x, y, width, height, o);
-
-              case 14:
-                _fillShape2 = _context4.sent;
-
-                this._fillSketch(this.ctx, _fillShape2, o);
-
-              case 16:
-                _context4.next = 18;
-                return lib.ellipse(x, y, width, height, o);
-
-              case 18:
-                drawing = _context4.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 20:
-              case 'end':
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-
-      function ellipse(_x11, _x12, _x13, _x14, _x15) {
-        return _ref4.apply(this, arguments);
+    value: async function ellipse(x, y, width, height, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      if (o.fill) {
+        if (o.fillStyle === 'solid') {
+          var fillShape = await lib.ellipse(x, y, width, height, o);
+          this._fill(this.ctx, fillShape, o);
+        } else {
+          var _fillShape2 = await lib.hachureFillEllipse(x, y, width, height, o);
+          this._fillSketch(this.ctx, _fillShape2, o);
+        }
       }
-
-      return ellipse;
-    }()
+      var drawing = await lib.ellipse(x, y, width, height, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'circle',
-    value: function () {
-      var _ref5 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(x, y, radius, options) {
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return this.ellipse(x, y, radius, radius, options);
-
-              case 2:
-                return _context5.abrupt('return', _context5.sent);
-
-              case 3:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-
-      function circle(_x16, _x17, _x18, _x19) {
-        return _ref5.apply(this, arguments);
-      }
-
-      return circle;
-    }()
+    value: async function circle(x, y, radius, options) {
+      return await this.ellipse(x, y, radius, radius, options);
+    }
   }, {
     key: 'linearPath',
-    value: function () {
-      var _ref6 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(points, options) {
-        var o, lib, drawing;
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                o = this._options(options);
-                _context6.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context6.sent;
-                _context6.next = 6;
-                return lib.linearPath(points, false, o);
-
-              case 6:
-                drawing = _context6.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 8:
-              case 'end':
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-
-      function linearPath(_x20, _x21) {
-        return _ref6.apply(this, arguments);
-      }
-
-      return linearPath;
-    }()
+    value: async function linearPath(points, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      var drawing = await lib.linearPath(points, false, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'polygon',
-    value: function () {
-      var _ref7 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(points, options) {
-        var o, lib, xc, yc, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, p, fillShape, _fillShape3, drawing;
+    value: async function polygon(points, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      if (o.fill) {
+        var xc = [],
+            yc = [];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                o = this._options(options);
-                _context7.next = 3;
-                return this.lib();
+        try {
+          for (var _iterator = points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var p = _step.value;
 
-              case 3:
-                lib = _context7.sent;
-
-                if (!o.fill) {
-                  _context7.next = 36;
-                  break;
-                }
-
-                xc = [], yc = [];
-                _iteratorNormalCompletion = true;
-                _didIteratorError = false;
-                _iteratorError = undefined;
-                _context7.prev = 9;
-
-                for (_iterator = points[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                  p = _step.value;
-
-                  xc.push(p[0]);
-                  yc.push(p[1]);
-                }
-                _context7.next = 17;
-                break;
-
-              case 13:
-                _context7.prev = 13;
-                _context7.t0 = _context7['catch'](9);
-                _didIteratorError = true;
-                _iteratorError = _context7.t0;
-
-              case 17:
-                _context7.prev = 17;
-                _context7.prev = 18;
-
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
-                }
-
-              case 20:
-                _context7.prev = 20;
-
-                if (!_didIteratorError) {
-                  _context7.next = 23;
-                  break;
-                }
-
-                throw _iteratorError;
-
-              case 23:
-                return _context7.finish(20);
-
-              case 24:
-                return _context7.finish(17);
-
-              case 25:
-                if (!(o.fillStyle === 'solid')) {
-                  _context7.next = 32;
-                  break;
-                }
-
-                _context7.next = 28;
-                return lib.solidFillShape(xc, yc, o);
-
-              case 28:
-                fillShape = _context7.sent;
-
-                this._fill(this.ctx, fillShape, o);
-                _context7.next = 36;
-                break;
-
-              case 32:
-                _context7.next = 34;
-                return lib.hachureFillShape(xc, yc, o);
-
-              case 34:
-                _fillShape3 = _context7.sent;
-
-                this._fillSketch(this.ctx, _fillShape3, o);
-
-              case 36:
-                _context7.next = 38;
-                return lib.linearPath(points, true, o);
-
-              case 38:
-                drawing = _context7.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 40:
-              case 'end':
-                return _context7.stop();
+            xc.push(p[0]);
+            yc.push(p[1]);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
-        }, _callee7, this, [[9, 13, 17, 25], [18,, 20, 24]]);
-      }));
+        }
 
-      function polygon(_x22, _x23) {
-        return _ref7.apply(this, arguments);
+        if (o.fillStyle === 'solid') {
+          var fillShape = await lib.solidFillShape(xc, yc, o);
+          this._fill(this.ctx, fillShape, o);
+        } else {
+          var _fillShape3 = await lib.hachureFillShape(xc, yc, o);
+          this._fillSketch(this.ctx, _fillShape3, o);
+        }
       }
-
-      return polygon;
-    }()
+      var drawing = await lib.linearPath(points, true, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'arc',
-    value: function () {
-      var _ref8 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(x, y, width, height, start, stop, closed, options) {
-        var o, lib, fillShape, _fillShape4, drawing;
-
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                o = this._options(options);
-                _context8.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context8.sent;
-
-                if (!(closed && o.fill)) {
-                  _context8.next = 16;
-                  break;
-                }
-
-                if (!(o.fillStyle === 'solid')) {
-                  _context8.next = 12;
-                  break;
-                }
-
-                _context8.next = 8;
-                return lib.arc(x, y, width, height, start, stop, true, false, o);
-
-              case 8:
-                fillShape = _context8.sent;
-
-                this._fill(this.ctx, fillShape, o);
-                _context8.next = 16;
-                break;
-
-              case 12:
-                _context8.next = 14;
-                return lib.hachureFillArc(x, y, width, height, start, stop, o);
-
-              case 14:
-                _fillShape4 = _context8.sent;
-
-                this._fillSketch(this.ctx, _fillShape4, o);
-
-              case 16:
-                _context8.next = 18;
-                return lib.arc(x, y, width, height, start, stop, closed, true, o);
-
-              case 18:
-                drawing = _context8.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 20:
-              case 'end':
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this);
-      }));
-
-      function arc(_x24, _x25, _x26, _x27, _x28, _x29, _x30, _x31) {
-        return _ref8.apply(this, arguments);
+    value: async function arc(x, y, width, height, start, stop, closed, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      if (closed && o.fill) {
+        if (o.fillStyle === 'solid') {
+          var fillShape = await lib.arc(x, y, width, height, start, stop, true, false, o);
+          this._fill(this.ctx, fillShape, o);
+        } else {
+          var _fillShape4 = await lib.hachureFillArc(x, y, width, height, start, stop, o);
+          this._fillSketch(this.ctx, _fillShape4, o);
+        }
       }
-
-      return arc;
-    }()
+      var drawing = await lib.arc(x, y, width, height, start, stop, closed, true, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'curve',
-    value: function () {
-      var _ref9 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(points, options) {
-        var o, lib, drawing;
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                o = this._options(options);
-                _context9.next = 3;
-                return this.lib();
-
-              case 3:
-                lib = _context9.sent;
-                _context9.next = 6;
-                return lib.curve(points, o);
-
-              case 6:
-                drawing = _context9.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 8:
-              case 'end':
-                return _context9.stop();
-            }
-          }
-        }, _callee9, this);
-      }));
-
-      function curve(_x32, _x33) {
-        return _ref9.apply(this, arguments);
-      }
-
-      return curve;
-    }()
+    value: async function curve(points, options) {
+      var o = this._options(options);
+      var lib = await this.lib();
+      var drawing = await lib.curve(points, o);
+      this._draw(this.ctx, drawing, o);
+    }
   }, {
     key: 'path',
-    value: function () {
-      var _ref10 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(d, options) {
-        var o, lib, p2d, size, ns, svg, pathNode, bb, xc, yc, fillShape, hcanvas, _p2d, drawing;
-
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
-          while (1) {
-            switch (_context10.prev = _context10.next) {
-              case 0:
-                if (d) {
-                  _context10.next = 2;
-                  break;
-                }
-
-                return _context10.abrupt('return');
-
-              case 2:
-                o = this._options(options);
-                _context10.next = 5;
-                return this.lib();
-
-              case 5:
-                lib = _context10.sent;
-
-                if (!o.fill) {
-                  _context10.next = 34;
-                  break;
-                }
-
-                if (!(o.fillStyle === 'solid')) {
-                  _context10.next = 15;
-                  break;
-                }
-
-                this.ctx.save();
-                this.ctx.fillStyle = o.fill;
-                p2d = new Path2D(d);
-
-                this.ctx.fill(p2d);
-                this.ctx.restore();
-                _context10.next = 34;
-                break;
-
-              case 15:
-                size = [0, 0];
-
-                try {
-                  ns = "http://www.w3.org/2000/svg";
-                  svg = document.createElementNS(ns, "svg");
-
-                  svg.setAttribute("width", "0");
-                  svg.setAttribute("height", "0");
-                  pathNode = document.createElementNS(ns, "path");
-
-                  pathNode.setAttribute('d', d);
-                  svg.appendChild(pathNode);
-                  document.body.appendChild(svg);
-                  bb = pathNode.getBBox();
-
-                  if (bb) {
-                    size[0] = bb.width || 0;
-                    size[1] = bb.height || 0;
-                  }
-                  document.body.removeChild(svg);
-                } catch (err) {}
-                if (!(size[0] * size[1])) {
-                  size = [this.canvas.width || 100, this.canvas.height || 100];
-                }
-                size[0] = Math.min(size[0] * 4, this.canvas.width);
-                size[1] = Math.min(size[1] * 4, this.canvas.height);
-                xc = [0, size[0], size[0], 0];
-                yc = [0, 0, size[1], size[1]];
-                _context10.next = 24;
-                return lib.hachureFillShape(xc, yc, o);
-
-              case 24:
-                fillShape = _context10.sent;
-                hcanvas = document.createElement('canvas');
-
-                hcanvas.width = size[0];
-                hcanvas.height = size[1];
-                this._fillSketch(hcanvas.getContext("2d"), fillShape, o);
-                this.ctx.save();
-                this.ctx.fillStyle = this.ctx.createPattern(hcanvas, 'repeat');
-                _p2d = new Path2D(d);
-
-                this.ctx.fill(_p2d);
-                this.ctx.restore();
-
-              case 34:
-                _context10.next = 36;
-                return lib.svgPath(d, o);
-
-              case 36:
-                drawing = _context10.sent;
-
-                this._draw(this.ctx, drawing, o);
-
-              case 38:
-              case 'end':
-                return _context10.stop();
-            }
-          }
-        }, _callee10, this);
-      }));
-
-      function path(_x34, _x35) {
-        return _ref10.apply(this, arguments);
+    value: async function path(d, options) {
+      if (!d) {
+        return;
       }
-
-      return path;
-    }()
+      var o = this._options(options);
+      var lib = await this.lib();
+      if (o.fill) {
+        if (o.fillStyle === 'solid') {
+          this.ctx.save();
+          this.ctx.fillStyle = o.fill;
+          var p2d = new Path2D(d);
+          this.ctx.fill(p2d);
+          this.ctx.restore();
+        } else {
+          var size = [0, 0];
+          try {
+            var ns = "http://www.w3.org/2000/svg";
+            var svg = document.createElementNS(ns, "svg");
+            svg.setAttribute("width", "0");
+            svg.setAttribute("height", "0");
+            var pathNode = document.createElementNS(ns, "path");
+            pathNode.setAttribute('d', d);
+            svg.appendChild(pathNode);
+            document.body.appendChild(svg);
+            var bb = pathNode.getBBox();
+            if (bb) {
+              size[0] = bb.width || 0;
+              size[1] = bb.height || 0;
+            }
+            document.body.removeChild(svg);
+          } catch (err) {}
+          if (!(size[0] * size[1])) {
+            size = [this.canvas.width || 100, this.canvas.height || 100];
+          }
+          size[0] = Math.min(size[0] * 4, this.canvas.width);
+          size[1] = Math.min(size[1] * 4, this.canvas.height);
+          var xc = [0, size[0], size[0], 0];
+          var yc = [0, 0, size[1], size[1]];
+          var fillShape = await lib.hachureFillShape(xc, yc, o);
+          var hcanvas = document.createElement('canvas');
+          hcanvas.width = size[0];
+          hcanvas.height = size[1];
+          this._fillSketch(hcanvas.getContext("2d"), fillShape, o);
+          this.ctx.save();
+          this.ctx.fillStyle = this.ctx.createPattern(hcanvas, 'repeat');
+          var _p2d = new Path2D(d);
+          this.ctx.fill(_p2d);
+          this.ctx.restore();
+        }
+      }
+      var drawing = await lib.svgPath(d, o);
+      this._draw(this.ctx, drawing, o);
+    }
 
     // private
 

@@ -10,17 +10,28 @@ export default {
     name: 'rough',
     sourcemap: false
   },
-  plugins: [
-    babel({
-      babelrc: true,
-      comments: true,
-      runtimeHelpers: true
+  plugins: [ // (count: 3)
+    commonjs({
+      include: 'node_modules/**',
+      extensions: [
+        '.js'
+      ]
     }),
     resolve({
       jsnext: true,
       main: true,
+      // builtins: false,
       browser: true,
+      extensions: [
+        '.js',
+        '.json'
+      ]
     }),
-    commonjs()
-  ]
+    babel({
+      babelrc: false,
+      presets: [
+        'es2015-rollup'
+      ]
+    }),
+  ],
 }
