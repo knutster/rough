@@ -29,8 +29,10 @@ export default {
     }),
     babel({
       babelrc: false,
+      plugins: ['external-helpers'],
+      externalHelpers: true,
       presets: [
-        'es2015-rollup'
+        [ 'env', { modules: false }]
       ]
     }),
   ],
