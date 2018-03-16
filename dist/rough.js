@@ -1,58 +1,9 @@
 var rough = (function () {
 'use strict';
 
-var asyncToGenerator = function (fn) {
-  return function () {
-    var gen = fn.apply(this, arguments);
-    return new Promise(function (resolve, reject) {
-      function step(key, arg) {
-        try {
-          var info = gen[key](arg);
-          var value = info.value;
-        } catch (error) {
-          reject(error);
-          return;
-        }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-        if (info.done) {
-          resolve(value);
-        } else {
-          return Promise.resolve(value).then(function (value) {
-            step("next", value);
-          }, function (err) {
-            step("throw", err);
-          });
-        }
-      }
-
-      return step("next");
-    });
-  };
-};
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function RoughSegmentRelation() {
   return {
@@ -68,7 +19,7 @@ function RoughSegmentRelation() {
 
 var RoughSegment = function () {
   function RoughSegment(px1, py1, px2, py2) {
-    classCallCheck(this, RoughSegment);
+    _classCallCheck(this, RoughSegment);
 
     this.RoughSegmentRelationConst = RoughSegmentRelation();
     this.px1 = px1;
@@ -83,7 +34,7 @@ var RoughSegment = function () {
     this._undefined = this.a == 0 && this.b == 0 && this.c == 0;
   }
 
-  createClass(RoughSegment, [{
+  _createClass(RoughSegment, [{
     key: "isUndefined",
     value: function isUndefined() {
       return this._undefined;
@@ -195,12 +146,17 @@ var RoughSegment = function () {
       return Math.sqrt(dx * dx + dy * dy);
     }
   }]);
+
   return RoughSegment;
 }();
 
+var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var RoughHachureIterator = function () {
   function RoughHachureIterator(top, bottom, left, right, gap, sinAngle, cosAngle, tanAngle) {
-    classCallCheck(this, RoughHachureIterator);
+    _classCallCheck$1(this, RoughHachureIterator);
 
     this.top = top;
     this.bottom = bottom;
@@ -223,7 +179,7 @@ var RoughHachureIterator = function () {
     }
   }
 
-  createClass(RoughHachureIterator, [{
+  _createClass$1(RoughHachureIterator, [{
     key: "getNextLine",
     value: function getNextLine() {
       if (Math.abs(this.sinAngle) < 0.0001) {
@@ -273,29 +229,35 @@ var RoughHachureIterator = function () {
       return null;
     }
   }]);
+
   return RoughHachureIterator;
 }();
 
+var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var PathToken = function () {
   function PathToken(type, text) {
-    classCallCheck(this, PathToken);
+    _classCallCheck$2(this, PathToken);
 
     this.type = type;
     this.text = text;
   }
 
-  createClass(PathToken, [{
+  _createClass$2(PathToken, [{
     key: "isType",
     value: function isType(type) {
       return this.type === type;
     }
   }]);
+
   return PathToken;
 }();
 
 var ParsedPath = function () {
   function ParsedPath(d) {
-    classCallCheck(this, ParsedPath);
+    _classCallCheck$2(this, ParsedPath);
 
     this.PARAMS = {
       A: ["rx", "ry", "x-axis-rotation", "large-arc-flag", "sweep-flag", "x", "y"],
@@ -328,7 +290,7 @@ var ParsedPath = function () {
     this.processPoints();
   }
 
-  createClass(ParsedPath, [{
+  _createClass$2(ParsedPath, [{
     key: "loadFromSegments",
     value: function loadFromSegments(segments) {
       this.segments = segments;
@@ -488,7 +450,7 @@ var ParsedPath = function () {
     }
   }, {
     key: "closed",
-    get: function get$$1() {
+    get: function get() {
       if (typeof this._closed === 'undefined') {
         this._closed = false;
         var _iteratorNormalCompletion = true;
@@ -521,12 +483,13 @@ var ParsedPath = function () {
       return this._closed;
     }
   }]);
+
   return ParsedPath;
 }();
 
 var RoughPath = function () {
   function RoughPath(d) {
-    classCallCheck(this, RoughPath);
+    _classCallCheck$2(this, RoughPath);
 
     this.d = d;
     this.parsed = new ParsedPath(d);
@@ -536,7 +499,7 @@ var RoughPath = function () {
     this._first = null;
   }
 
-  createClass(RoughPath, [{
+  _createClass$2(RoughPath, [{
     key: "setPosition",
     value: function setPosition(x, y) {
       this._position = [x, y];
@@ -546,17 +509,17 @@ var RoughPath = function () {
     }
   }, {
     key: "segments",
-    get: function get$$1() {
+    get: function get() {
       return this.parsed.segments;
     }
   }, {
     key: "closed",
-    get: function get$$1() {
+    get: function get() {
       return this.parsed.closed;
     }
   }, {
     key: "linearPoints",
-    get: function get$$1() {
+    get: function get() {
       if (!this._linearPoints) {
         var lp = [];
         var points = [];
@@ -607,28 +570,29 @@ var RoughPath = function () {
     }
   }, {
     key: "first",
-    get: function get$$1() {
+    get: function get() {
       return this._first;
     },
-    set: function set$$1(v) {
+    set: function set(v) {
       this._first = v;
     }
   }, {
     key: "position",
-    get: function get$$1() {
+    get: function get() {
       return this._position;
     }
   }, {
     key: "x",
-    get: function get$$1() {
+    get: function get() {
       return this._position[0];
     }
   }, {
     key: "y",
-    get: function get$$1() {
+    get: function get() {
       return this._position[1];
     }
   }]);
+
   return RoughPath;
 }();
 
@@ -637,7 +601,7 @@ var RoughArcConverter = function () {
   // Code adapted from nsSVGPathDataParser.cpp in Mozilla 
   // https://hg.mozilla.org/mozilla-central/file/17156fbebbc8/content/svg/content/src/nsSVGPathDataParser.cpp#l887
   function RoughArcConverter(from, to, radii, angle, largeArcFlag, sweepFlag) {
-    classCallCheck(this, RoughArcConverter);
+    _classCallCheck$2(this, RoughArcConverter);
 
     var radPerDeg = Math.PI / 180;
     this._segIndex = 0;
@@ -679,7 +643,7 @@ var RoughArcConverter = function () {
     this._from = from;
   }
 
-  createClass(RoughArcConverter, [{
+  _createClass$2(RoughArcConverter, [{
     key: "getNextSegment",
     value: function getNextSegment() {
       var cp1, cp2, to;
@@ -715,18 +679,19 @@ var RoughArcConverter = function () {
       return 2 * Math.PI - (ta - tb);
     }
   }]);
+
   return RoughArcConverter;
 }();
 
 var PathFitter = function () {
   function PathFitter(sets, closed) {
-    classCallCheck(this, PathFitter);
+    _classCallCheck$2(this, PathFitter);
 
     this.sets = sets;
     this.closed = closed;
   }
 
-  createClass(PathFitter, [{
+  _createClass$2(PathFitter, [{
     key: "fit",
     value: function fit(simplification) {
       var outSets = [];
@@ -736,9 +701,9 @@ var PathFitter = function () {
 
       try {
         for (var _iterator3 = this.sets[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var set$$1 = _step3.value;
+          var set = _step3.value;
 
-          var length = set$$1.length;
+          var length = set.length;
           var estLength = Math.floor(simplification * length);
           if (estLength < 5) {
             if (length <= 5) {
@@ -746,7 +711,7 @@ var PathFitter = function () {
             }
             estLength = 5;
           }
-          outSets.push(this.reduce(set$$1, estLength));
+          outSets.push(this.reduce(set, estLength));
         }
       } catch (err) {
         _didIteratorError3 = true;
@@ -808,11 +773,11 @@ var PathFitter = function () {
     }
   }, {
     key: "reduce",
-    value: function reduce(set$$1, count) {
-      if (set$$1.length <= count) {
-        return set$$1;
+    value: function reduce(set, count) {
+      if (set.length <= count) {
+        return set;
       }
-      var points = set$$1.slice(0);
+      var points = set.slice(0);
       while (points.length > count) {
         var minArea = -1;
         var minIndex = -1;
@@ -836,15 +801,20 @@ var PathFitter = function () {
       return points;
     }
   }]);
+
   return PathFitter;
 }();
 
+var _createClass$3 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var RoughRenderer = function () {
   function RoughRenderer() {
-    classCallCheck(this, RoughRenderer);
+    _classCallCheck$3(this, RoughRenderer);
   }
 
-  createClass(RoughRenderer, [{
+  _createClass$3(RoughRenderer, [{
     key: 'line',
     value: function line(x1, y1, x2, y2, o) {
       var ops = this._doubleLine(x1, y1, x2, y2, o);
@@ -1497,14 +1467,21 @@ var RoughRenderer = function () {
       return intersections;
     }
   }]);
+
   return RoughRenderer;
 }();
+
+var _createClass$4 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 self._roughScript = self.document && self.document.currentScript && self.document.currentScript.src;
 
 var RoughCanvas = function () {
   function RoughCanvas(canvas, config) {
-    classCallCheck(this, RoughCanvas);
+    _classCallCheck$4(this, RoughCanvas);
 
     this.config = config || {};
     this.canvas = canvas;
@@ -1528,10 +1505,10 @@ var RoughCanvas = function () {
     }
   }
 
-  createClass(RoughCanvas, [{
+  _createClass$4(RoughCanvas, [{
     key: 'lib',
     value: function () {
-      var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
         var tos, worklySource, rendererSource, code, ourl;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -1574,7 +1551,7 @@ var RoughCanvas = function () {
   }, {
     key: 'line',
     value: function () {
-      var _ref2 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(x1, y1, x2, y2, options) {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(x1, y1, x2, y2, options) {
         var o, lib, drawing;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -1611,7 +1588,7 @@ var RoughCanvas = function () {
   }, {
     key: 'rectangle',
     value: function () {
-      var _ref3 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(x, y, width, height, options) {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(x, y, width, height, options) {
         var o, lib, ctx, xc, yc, fillShape, _fillShape, drawing;
 
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -1684,7 +1661,7 @@ var RoughCanvas = function () {
   }, {
     key: 'ellipse',
     value: function () {
-      var _ref4 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(x, y, width, height, options) {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(x, y, width, height, options) {
         var o, lib, fillShape, _fillShape2, drawing;
 
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -1753,7 +1730,7 @@ var RoughCanvas = function () {
   }, {
     key: 'circle',
     value: function () {
-      var _ref5 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(x, y, radius, options) {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(x, y, radius, options) {
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -1781,7 +1758,7 @@ var RoughCanvas = function () {
   }, {
     key: 'linearPath',
     value: function () {
-      var _ref6 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(points, options) {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(points, options) {
         var o, lib, drawing;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
@@ -1818,7 +1795,7 @@ var RoughCanvas = function () {
   }, {
     key: 'polygon',
     value: function () {
-      var _ref7 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(points, options) {
+      var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(points, options) {
         var o, lib, xc, yc, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, p, fillShape, _fillShape3, drawing;
 
         return regeneratorRuntime.wrap(function _callee7$(_context7) {
@@ -1933,7 +1910,7 @@ var RoughCanvas = function () {
   }, {
     key: 'arc',
     value: function () {
-      var _ref8 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(x, y, width, height, start, stop, closed, options) {
+      var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(x, y, width, height, start, stop, closed, options) {
         var o, lib, fillShape, _fillShape4, drawing;
 
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
@@ -2002,7 +1979,7 @@ var RoughCanvas = function () {
   }, {
     key: 'curve',
     value: function () {
-      var _ref9 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(points, options) {
+      var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(points, options) {
         var o, lib, drawing;
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
@@ -2039,7 +2016,7 @@ var RoughCanvas = function () {
   }, {
     key: 'path',
     value: function () {
-      var _ref10 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(d, options) {
+      var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(d, options) {
         var o, lib, p2d, size, ns, svg, pathNode, bb, xc, yc, fillShape, hcanvas, _p2d, drawing;
 
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
@@ -2245,6 +2222,7 @@ var RoughCanvas = function () {
       return new RoughRenderer();
     }
   }]);
+
   return RoughCanvas;
 }();
 

@@ -29,7 +29,7 @@ export default {
     }),
     babel({
       babelrc: false,
-      plugins: ['external-helpers'],
+      plugins: ['transform-regenerator'],
       exclude: 'node_modules/**',
       //externalHelpers: true,
       presets: [
