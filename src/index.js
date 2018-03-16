@@ -1,4 +1,5 @@
 import { RoughCanvas } from './canvas.js';
+import 'babel-polyfill/dist/polyfill';
 
 export default {
   canvas(canvas, config) {
