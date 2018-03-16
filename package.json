@@ -1,6 +1,6 @@
 {
   "name": "roughjs",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Create graphics on HTML Canvas with a hand-drawn, sketchy, appearance.",
   "main": "src/index.js",
   "scripts": {
@@ -37,7 +37,5 @@
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-node-resolve": "^3.2.0"
   },
-  "dependencies": {
-    "babel-polyfill": "^6.26.0"
-  }
+  "dependencies": {}
 }
