@@ -1,6 +1,6 @@
 {
   "name": "roughjs",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Create graphics on HTML Canvas with a hand-drawn, sketchy, appearance.",
   "main": "src/index.js",
   "scripts": {
